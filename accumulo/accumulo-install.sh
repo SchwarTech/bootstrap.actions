@@ -16,17 +16,17 @@ cd /home/hadoop
 cat > /home/hadoop/accumulo.sh << 'EOF2'
 if ps ax | grep -v grep | egrep "datanode|namenode"> /dev/null
 then
-if [ ! -d "/home/hadoop/accumulo-1.4.2" ]; then
+if [ ! -d "/home/hadoop/accumulo-1.5.1" ]; then
 cd /home/hadoop/
 sudo apt-get -y install zookeeper expect
-wget http://mirrors.sonic.net/apache/accumulo/1.4.2/accumulo-1.4.2-dist.tar.gz
-tar -xvzf accumulo-1.4.2-dist.tar.gz
-##cp -a accumulo-1.4.2 /home/hadoop/
-cp accumulo-1.4.2/conf/examples/1GB/standalone/* accumulo-1.4.2/conf/
-sed -i "s/<value>localhost:2181<\/value>/<value>$1:2181<\/value>/" accumulo-1.4.2/conf/accumulo-site.xml
+wget http://mirrors.sonic.net/apache/accumulo/1.5.1/accumulo-1.5.1-bin.tar.gz
+tar -xvzf accumulo-1.5.1-bin.tar.gz
+##cp -a accumulo-1.5.1 /home/hadoop/
+cp accumulo-1.5.1/conf/examples/1GB/standalone/* accumulo-1.5.1/conf/
+sed -i "s/<value>localhost:2181<\/value>/<value>$1:2181<\/value>/" accumulo-1.5.1/conf/accumulo-site.xml
 
-cat >> accumulo-1.4.2/conf/accumulo-env.sh  << EOF
-export ACCUMULO_HOME=/home/hadoop/accumulo-1.4.2
+cat >> accumulo-1.5.1/conf/accumulo-env.sh  << EOF
+export ACCUMULO_HOME=/home/hadoop/accumulo-1.5.1
 export HADOOP_HOME=/home/hadoop
 export ACCUMULO_LOG_DIR=/mnt/var/log/hadoop
 export ZOOKEEPER_HOME=/usr/share/java
@@ -38,20 +38,20 @@ grep -Fq '"isMaster":true' /mnt/var/lib/info/instance.json
 if [ $? -eq 0 ];
 then
         expect -c "
-        spawn  accumulo-1.4.2/bin/accumulo init
+        spawn  accumulo-1.5.1/bin/accumulo init
         expect -nocase \"Instance name\" {send \"$2\r\"}
         expect -nocase \"Enter initial password for*\" {send \"$3\r\"}
         expect -nocase \"*password*\" {send \"$3\r\r\";expect eof}"
-        hostname > accumulo-1.4.2/conf/masters
-        echo 'x' > accumulo-1.4.2/conf/slaves
+        hostname > accumulo-1.5.1/conf/masters
+        echo 'x' > accumulo-1.5.1/conf/slaves
 
 else
-        hostname > accumulo-1.4.2/conf/slaves
+        hostname > accumulo-1.5.1/conf/slaves
         MASTER=$(grep -i "job.tracker<" /home/hadoop/conf/mapred-site.xml | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}')
-        echo $MASTER > accumulo-1.4.2/conf/masters
+        echo $MASTER > accumulo-1.5.1/conf/masters
 fi
 
-accumulo-1.4.2/bin/start-here.sh
+accumulo-1.5.1/bin/start-here.sh
 sudo sed -i 's/.*accumulo.*//' /etc/crontab
 fi
 fi
