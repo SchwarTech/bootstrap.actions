@@ -16,7 +16,7 @@ The following code sample is part of an AWS article demonstrating the installati
 Run the following command using the Amazon EMR Command Line Interface and replace the text in capital letters as follows.  Check the Amazon EMR Bootstrap Actions repository for the latest Accumulo installation script.
 
 elastic-mapreduce --create --alive --name "Accumulo" --bootstrap-action \
-s3://elasticmapreduce/samples/accumulo/accumulo-install.sh \
+s3://schwartech2/bootstrap.actions/accumulo/accumulo-install.sh \
 --args "IP,DBNAME,PASSWORD" --bootstrap-name "install Accumulo" \
 --enable-debugging --log-uri s3://BUCKETNAME/accumulo-logs/ \
 --instance-type m1.large --instance-count 4 --key-pair KEY
@@ -26,3 +26,4 @@ DBNAME: Name of the database that you would like to create in Accumulo
 PASSWORD: Accumulo DB password 
 KEY: Your Amazon EC2 SSH key-pair name
 BUCKETNAME: Your Amazon S3 bucket name where the Amazon EMR logs will be uploaded
+
